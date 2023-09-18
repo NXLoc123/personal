@@ -6,6 +6,7 @@ import {
   IUpdateUser,
   IUserFilter,
 } from './interface/user.interface';
+import { MailsService } from '../mails/mails.service';
 
 type IUserQuery = FindOptionsWhere<User> | FindOptionsWhere<User>[];
 
@@ -13,6 +14,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly mailsService: MailsService,
   ) {}
 
   async createNewUser(body: ICreateUser) {

@@ -8,6 +8,7 @@ import { ClientAuthService } from '../../client/auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
+import { MailsModule } from '../mails/mails.module';
 
 @Module({
   imports: [
@@ -22,6 +23,8 @@ import { User } from '../users/entities/user.entity';
       }),
     }),
     TypeOrmModule.forFeature([User]),
+
+    MailsModule,
     PassportModule,
   ],
   providers: [AuthService, LoginStrategy, ClientAuthService, UsersService],

@@ -21,8 +21,8 @@ async function bootstrap() {
   });
   SwaggerModule.setup('client/api', app, ClientDocument);
 
-  Logger.debug(`Server is listening on port: ${port}`);
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.listen(port);
+  Logger.debug(`Server is listening on port: ${port}`);
 }
 bootstrap();

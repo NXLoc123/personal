@@ -13,6 +13,12 @@ export const envConfig = () => ({
     password: process.env.DB_PASSWORD,
     name: process.env.DB_NAME,
   },
+  nodeMailer: {
+    host: process.env.MAILER_HOST,
+    secure: process.env.MAILER_SECURE === 'true',
+    user: process.env.MAILER_USER,
+    password: process.env.MAILER_PASSWORD,
+  },
 });
 
 export const envPathFile = () => {

@@ -23,8 +23,15 @@ export class ClientUsersController {
   constructor(private readonly clientUsersService: ClientUsersService) {}
 
   @Get('profile')
-  getUserProfile(@User() user: IUser) {
-    return user;
+  async getUserProfile(@User() user: IUser) {
+    try {
+      return user;
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: users.controller.ts:31 ~ ClientUsersController ~ getUserProfile ~ error:',
+        error,
+      );
+    }
   }
 
   @Patch('profile/update')

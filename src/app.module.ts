@@ -21,6 +21,12 @@ import { HttpExceptionFilter } from './shared/libs/httpException.filter';
       useFactory: databaseConfig,
     }),
 
+    // MailerModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: nodeMailerConfig,
+    // }),
+
     ClientModule,
     RouterModule.register([
       {
