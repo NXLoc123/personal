@@ -12,17 +12,17 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'locboybn26@gmail.com' })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '0912123342' })
   @IsPhoneNumber('VN')
   @IsNotEmpty()
   phoneNumber: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '12121212' })
   @IsString()
   @IsNotEmpty()
   password: string;

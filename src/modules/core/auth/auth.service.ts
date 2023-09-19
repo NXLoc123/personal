@@ -4,14 +4,12 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
 import { ICreateUser } from '../users/interface/user.interface';
-import { OtpsService } from '../otps/otps.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private readonly usersService: UsersService,
-    private readonly otpsService: OtpsService,
   ) {}
 
   private async genSalt() {
@@ -79,9 +77,5 @@ export class AuthService {
     body.password = hashPassword;
     const result = await this.usersService.createNewUser(body);
     return result;
-  }
-
-  async checkOtpCode(code: string) {
-    console.log('code', code);
   }
 }

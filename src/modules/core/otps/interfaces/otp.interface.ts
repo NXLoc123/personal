@@ -18,6 +18,11 @@ export type IOtpDestinationType = `${OtpDestinationTypes}`;
 export type IOtpType = `${OtpTypes}`;
 export type IOtpStatusType = `${OtpStatusTypes}`;
 
+export type IQueryProfileRegisterOtp = Pick<
+  ICreateOtp,
+  'otpDestination' | 'otpDestinationType'
+>;
+
 export type ICreateOtp = Pick<
   IOtp,
   | 'otpCode'

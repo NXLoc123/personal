@@ -4,7 +4,7 @@ export enum OtpTypes {
 }
 
 export enum OtpStatusTypes {
-  Created = 'created',
+  Created = 'unverified',
   Verified = 'verified',
 }
 

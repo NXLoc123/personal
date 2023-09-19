@@ -1,8 +1,13 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Otp } from './entities/otp.entity';
-import { FindManyOptions, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { getRandomStringNumberByLength } from '../../../shared/libs/helper';
-import { ICreateOtp, ISendOtpByMailBody } from './interfaces/otp.interface';
+import {
+  ICreateOtp,
+  IOtpDestinationType,
+  IQueryProfileRegisterOtp,
+  ISendOtpByMailBody,
+} from './interfaces/otp.interface';
 import { OtpDestinationTypes, OtpStatusTypes } from './enums/otp.enum';
 
 export class OtpsService {
@@ -22,6 +27,24 @@ export class OtpsService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async checkOtpCode(
+    otpCode: string,
+    otpDestination: string,
+    otpDestinationType: IOtpDestinationType,
+  ) {
+    const params: IQueryProfileRegisterOtp = {
+      otpDestination,
+      otpDestinationType,
+    };
+    const currentOtp = await this.findProfileRegisterOtp(params);
+    const isInvalidOtpCode =
+      !currentOtp ||
+      new Date(currentOtp.expiredAt) < new Date() ||
+      currentOtp.otpCode !== otpCode;
+    if (isInvalidOtpCode) return false;
+    return await this.updateOtpStatus(currentOtp.id);
   }
 
   async createNewOtp({
@@ -53,11 +76,30 @@ export class OtpsService {
     return await this.saveOtp(result);
   }
 
-  async findOtpByQuery(query: FindManyOptions<Otp>) {
+  async findProfileRegisterOtp(params: IQueryProfileRegisterOtp) {
     try {
-      return await this.otpsRepository.find(query);
+      const queryBuilder = this.otpsRepository.createQueryBuilder('otps');
+      queryBuilder
+        .where({ ...params, otpStatus: OtpStatusTypes.Created })
+        .orderBy('otps.createdAt', 'DESC');
+      return await queryBuilder.getOne();
     } catch (error) {
       throw error;
+    }
+  }
+
+  async updateOtpStatus(id: string) {
+    try {
+      await this.otpsRepository.update(id, {
+        otpStatus: OtpStatusTypes.Verified,
+      });
+      return true;
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: otps.service.ts:98 ~ OtpsService ~ updateOtpStatus ~ error:',
+        error,
+      );
+      return false;
     }
   }
 }

@@ -14,6 +14,7 @@ import {
   getInternalServerErrorResponse,
 } from '../../../shared/libs/getResponse';
 import { ERROR_MESSAGES } from '../../../shared/constants/baseError.constant';
+import { OtpDestinationTypes } from '../../core/otps/enums/otp.enum';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -38,10 +39,18 @@ export class ClientAuthController {
   @Post('register')
   async register(@Body() { otpCode, ...body }: RegisterDto) {
     try {
-      const isValidOtpCode = await this.clientAuthService.verifyOtpCode(
-        otpCode,
-        body.email,
-      );
+      let isValidOtpCode: boolean = true;
+      switch (body.otpDestinationType) {
+        case OtpDestinationTypes.Email:
+          isValidOtpCode = await this.clientAuthService.verifyOtpCodeByMail(
+            otpCode,
+            body.email,
+            body.otpDestinationType,
+          );
+          break;
+        case OtpDestinationTypes.Phone:
+          break;
+      }
       if (!isValidOtpCode)
         return getErrorResponse(
           HttpStatus.BAD_REQUEST,

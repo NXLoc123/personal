@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateUserDto } from '../../users/dto/user.dto';
-import { IsString, Length } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
+import { OtpDestinationTypes } from '../../otps/enums/otp.enum';
+import { IOtpDestinationType } from '../../otps/interfaces/otp.interface';
 
 export class LoginDto {
   @ApiProperty()
@@ -15,4 +17,9 @@ export class RegisterDto extends CreateUserDto {
   @IsString()
   @Length(6, 6)
   otpCode: string;
+
+  @ApiProperty({ example: OtpDestinationTypes.Email })
+  @IsEnum(OtpDestinationTypes)
+  @IsNotEmpty()
+  otpDestinationType: IOtpDestinationType;
 }
