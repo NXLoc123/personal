@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ClientAuthService } from './auth.service';
 import { LoginGuard } from '../../core/auth/guards/login.guard';
@@ -9,7 +9,11 @@ import {
   UserRoleTypes,
   UserStatusTypes,
 } from '../../core/users/enum/user.enum';
-import { getInternalServerErrorResponse } from '../../../shared/libs/getResponse';
+import {
+  getErrorResponse,
+  getInternalServerErrorResponse,
+} from '../../../shared/libs/getResponse';
+import { ERROR_MESSAGES } from '../../../shared/constants/baseError.constant';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -32,8 +36,17 @@ export class ClientAuthController {
   }
 
   @Post('register')
-  async register(@Body() body: RegisterDto) {
+  async register(@Body() { otpCode, ...body }: RegisterDto) {
     try {
+      const isValidOtpCode = await this.clientAuthService.verifyOtpCode(
+        otpCode,
+        body.email,
+      );
+      if (!isValidOtpCode)
+        return getErrorResponse(
+          HttpStatus.BAD_REQUEST,
+          ERROR_MESSAGES.Otp.OTP_CODE_INVALID,
+        );
       const createUserDto = {
         ...body,
         role: UserRoleTypes.User,

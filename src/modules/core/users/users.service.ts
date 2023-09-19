@@ -2,6 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import {
+  ICheckExistProfileDetail,
   ICreateUser,
   IUpdateUser,
   IUserFilter,
@@ -16,6 +17,14 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
     private readonly mailsService: MailsService,
   ) {}
+  async checkTheExistenceProfileRegister({
+    email,
+    phoneNumber,
+  }: ICheckExistProfileDetail) {
+    const userQuery = [{ email }, { phoneNumber }];
+    const result = await this.findOneUserByQuery(userQuery);
+    return !!result;
+  }
 
   async createNewUser(body: ICreateUser) {
     try {

@@ -9,6 +9,8 @@ import { UsersService } from '../users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { MailsModule } from '../mails/mails.module';
+import { OtpsService } from '../otps/otps.service';
+import { Otp } from '../otps/entities/otp.entity';
 
 @Module({
   imports: [
@@ -22,12 +24,18 @@ import { MailsModule } from '../mails/mails.module';
         },
       }),
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Otp]),
 
     MailsModule,
     PassportModule,
   ],
-  providers: [AuthService, LoginStrategy, ClientAuthService, UsersService],
+  providers: [
+    AuthService,
+    LoginStrategy,
+    ClientAuthService,
+    UsersService,
+    OtpsService,
+  ],
   exports: [AuthService, ClientAuthService],
 })
 export class AuthModule {}

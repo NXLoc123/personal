@@ -18,4 +18,6 @@ export type ICreateUser = Omit<IUser, keyof IBaseEntity | 'role'>;
 export type IUpdateUser = Partial<ICreateUser>;
 export type IUpdateUserRole = Pick<IUser, 'role'>;
 
+export type ICheckExistProfileDetail = Pick<IUser, 'email' | 'phoneNumber'>;
+
 export type IUserFilter = Partial<Pick<IUser, 'role' | 'status'>>;

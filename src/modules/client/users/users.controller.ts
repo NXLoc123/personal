@@ -1,19 +1,11 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Patch,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ClientUsersService } from './users.service';
 import { JwtAuthGuard } from '../../core/auth/guards/jwtAuth.guard';
 import { User } from '../../../shared/decorators/user.decorator';
 import { IUser } from '../../core/users/interface/user.interface';
 import { UpdateUserWithoutPasswordDto } from '../../core/users/dto/user.dto';
-import { getErrorResponse } from '../../../shared/libs/getResponse';
-import { COMMON_ERROR_MESSAGE } from '../../../shared/constants/baseError.constant';
+import { getInternalServerErrorResponse } from '../../../shared/libs/getResponse';
 
 @ApiTags('Users')
 @Controller('users')
@@ -46,10 +38,7 @@ export class ClientUsersController {
         '🚀 ~ file: users.controller.ts:38 ~ ClientUsersController ~ error:',
         error,
       );
-      return getErrorResponse(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        COMMON_ERROR_MESSAGE.INTERNAL_SERVER_ERROR,
-      );
+      return getInternalServerErrorResponse();
     }
   }
 

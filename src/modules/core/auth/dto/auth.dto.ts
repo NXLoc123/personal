@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateUserDto } from '../../users/dto/user.dto';
+import { IsString, Length } from 'class-validator';
 
 export class LoginDto {
   @ApiProperty()
@@ -9,4 +10,9 @@ export class LoginDto {
   password: string;
 }
 
-export class RegisterDto extends CreateUserDto {}
+export class RegisterDto extends CreateUserDto {
+  @ApiProperty()
+  @IsString()
+  @Length(6, 6)
+  otpCode: string;
+}

@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { User } from '../modules/core/users/entities/user.entity';
+import { Otp } from '../modules/core/otps/entities/otp.entity';
 
 export const databaseConfig = (
   configService: ConfigService,
@@ -17,4 +18,4 @@ export const databaseConfig = (
   //   migrationsRun: false,
 });
 
-const ENTITIES = [User];
+const ENTITIES = [User, Otp];

@@ -5,7 +5,7 @@ import {
   getErrorResponse,
   getNoContentSuccessResponse,
 } from '../../../shared/libs/getResponse';
-import { AUTH_ERROR_MESSAGE } from '../../../shared/constants/baseError.constant';
+import { ERROR_MESSAGES } from '../../../shared/constants/baseError.constant';
 
 @Injectable()
 export class ClientAuthService {
@@ -30,9 +30,13 @@ export class ClientAuthService {
     if (isValidUser)
       return getErrorResponse(
         HttpStatus.BAD_REQUEST,
-        AUTH_ERROR_MESSAGE.USER_INVALID,
+        ERROR_MESSAGES.Auth.USER_INVALID,
       );
     await this.authService.createNewUser(body);
     return getNoContentSuccessResponse();
+  }
+
+  async verifyOtpCode(code: string, email: string) {
+    return { code, email };
   }
 }
