@@ -38,3 +38,4 @@ export interface ISendOtpByMailBody {
   otpType: IOtpType;
   otpDestinationType: IOtpDestinationType;
 }
+export type ISendOtpBySmsBody = ISendOtpByMailBody;

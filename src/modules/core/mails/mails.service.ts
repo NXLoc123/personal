@@ -1,19 +1,19 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { ISendOtpByMailBody } from '../otps/interfaces/otp.interface';
+import { getContentRegisterOtp } from '../otps/constant/otps.constant';
 
 @Injectable()
 export class MailsService {
   constructor(private mailerService: MailerService) {}
   private VERIFY_ACCOUNT_MAIL_SUBJECT = 'OTP Verification';
   private getMailText(otp: string) {
-    return `OTP: ${otp} is used to verify your account`;
+    return getContentRegisterOtp(otp);
   }
 
-  async sendMail(body: ISendOtpByMailBody, otp: string) {
+  async sendMail(email: string, otp: string) {
     try {
       await this.mailerService.sendMail({
-        to: body.email,
+        to: email,
         subject: this.VERIFY_ACCOUNT_MAIL_SUBJECT,
         text: this.getMailText(otp),
       });

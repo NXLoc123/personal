@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["Otps", "timestamptz", "typeorm"]
+  "cSpell.words": [
+    "apikey",
+    "ESMS",
+    "Otps",
+    "secretkey",
+    "timestamptz",
+    "typeorm"
+  ]
 }

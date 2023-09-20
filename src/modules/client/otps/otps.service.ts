@@ -7,8 +7,13 @@ import {
 } from '../../../shared/libs/getResponse';
 import { ERROR_MESSAGES } from '../../../shared/constants/baseError.constant';
 import { UsersService } from '../../core/users/users.service';
-import { ISendOtpByMailBody } from '../../core/otps/interfaces/otp.interface';
+import {
+  ISendOtpByMailBody,
+  ISendOtpBySmsBody,
+} from '../../core/otps/interfaces/otp.interface';
 import { ICheckExistProfileDetail } from '../../core/users/interface/user.interface';
+import { ESmsService } from '../../core/esms/esms.service';
+import { IErrorResponse } from '../../../shared/interface/basic.interface';
 
 @Injectable()
 export class ClientOtpsService {
@@ -16,11 +21,19 @@ export class ClientOtpsService {
     private readonly otpsService: OtpsService,
     private readonly mailsService: MailsService,
     private readonly usersService: UsersService,
+    private readonly eSmsService: ESmsService,
   ) {}
-  private async checkValidProfileRegister(body: ICheckExistProfileDetail) {
+  private async checkValidProfileRegister(
+    body: ICheckExistProfileDetail,
+  ): Promise<IErrorResponse | void> {
     const isExist =
       await this.usersService.checkTheExistenceProfileRegister(body);
-    return !isExist;
+    if (isExist)
+      return getErrorResponse(
+        HttpStatus.BAD_REQUEST,
+        ERROR_MESSAGES.Auth.USER_INVALID,
+      );
+    return;
   }
 
   async sendOtpByMail(body: ISendOtpByMailBody) {
@@ -29,13 +42,10 @@ export class ClientOtpsService {
       phoneNumber: body.phoneNumber,
     };
     const isValidProfile = await this.checkValidProfileRegister(checkBody);
-    if (!isValidProfile)
-      return getErrorResponse(
-        HttpStatus.BAD_REQUEST,
-        ERROR_MESSAGES.Auth.USER_INVALID,
-      );
+    if (!!isValidProfile) return isValidProfile;
+
     const { otpCode } = await this.otpsService.createNewOtp(body);
-    const result = await this.mailsService.sendMail(body, otpCode);
+    const result = await this.mailsService.sendMail(body.email, otpCode);
     if (!result)
       return getErrorResponse(
         HttpStatus.BAD_REQUEST,
@@ -44,7 +54,20 @@ export class ClientOtpsService {
     return getNoContentSuccessResponse();
   }
 
-  async sendOtpBySms() {
-    return 'Pending';
+  async sendOtpBySms(body: ISendOtpBySmsBody) {
+    const checkBody: ICheckExistProfileDetail = {
+      email: body.email,
+      phoneNumber: body.phoneNumber,
+    };
+    const isValidProfile = await this.checkValidProfileRegister(checkBody);
+    if (!!isValidProfile) return isValidProfile;
+    const { otpCode } = await this.otpsService.createNewOtp(body);
+    const result = await this.eSmsService.sendOtpSms(otpCode, body.phoneNumber);
+    if (!result)
+      return getErrorResponse(
+        HttpStatus.BAD_REQUEST,
+        ERROR_MESSAGES.Otp.SEND_OTP_FAILED,
+      );
+    return getNoContentSuccessResponse();
   }
 }

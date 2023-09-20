@@ -17,7 +17,7 @@ export class ClientOtpsController {
         case OtpDestinationTypes.Email:
           return await this.clientOtpsService.sendOtpByMail(body);
         case OtpDestinationTypes.Phone:
-          return await this.clientOtpsService.sendOtpBySms();
+          return await this.clientOtpsService.sendOtpBySms(body);
       }
     } catch (error) {
       console.log(

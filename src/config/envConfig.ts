@@ -19,6 +19,11 @@ export const envConfig = () => ({
     user: process.env.MAILER_USER,
     password: process.env.MAILER_PASSWORD,
   },
+  eSms: {
+    host: process.env.ESMS_HOST,
+    apikey: process.env.ESMS_API_KEY,
+    secretkey: process.env.ESMS_SECRET_KEY,
+  },
 });
 
 export const envPathFile = () => {
