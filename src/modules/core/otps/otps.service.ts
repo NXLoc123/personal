@@ -1,7 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Otp } from './entities/otp.entity';
 import { Repository } from 'typeorm';
-import { getRandomStringNumberByLength } from '../../../shared/libs/helper';
+import {
+  getRandomStringNumberByLength,
+  setStartAndEndOfDateByTime,
+} from '../../../shared/libs/helper';
 import {
   ICreateOtp,
   IOtpDestinationType,
@@ -24,6 +27,25 @@ export class OtpsService {
     try {
       const result = this.otpsRepository.create(body);
       return await this.otpsRepository.save(result);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getOtpRequestAttempts(otpDestination: string) {
+    try {
+      const { startOfDay, endOfDay } = setStartAndEndOfDateByTime(new Date());
+      const queryBuilder = this.otpsRepository.createQueryBuilder('otps');
+      queryBuilder
+        .where({
+          otpDestination,
+        })
+        .andWhere('otps.createdAt BETWEEN :startOfDay AND :endOfDay', {
+          startOfDay,
+          endOfDay,
+        });
+      const otpsListInThisDay = await queryBuilder.getMany();
+      return otpsListInThisDay.length;
     } catch (error) {
       throw error;
     }

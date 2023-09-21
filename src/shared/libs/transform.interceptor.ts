@@ -41,14 +41,18 @@ export class TransformInterceptor<T>
 
   handleData(method: string, data: any, context: ExecutionContext) {
     let status = HttpStatus.OK;
-    const { statusCode } = data;
-    if (statusCode) {
-      status = statusCode;
+
+    if (!data) status = HttpStatus.OK;
+
+    if (data?.statusCode) {
+      status = data.statusCode;
     }
-    if (method === HttpMethod.POST && status === HttpStatus.OK) {
+
+    if (data && method === HttpMethod.POST && status === HttpStatus.OK) {
       status = HttpStatus.CREATED;
     }
     context.switchToHttp().getResponse().status(status);
+
     return data;
   }
 }

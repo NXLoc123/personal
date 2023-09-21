@@ -1,3 +1,5 @@
+import { MAXIMUM_NUMBER_OF_TIMES_REQUEST } from '../../modules/core/otps/constant/otps.constant';
+
 export const ERROR_MESSAGES = {
   Common: {
     NOT_FOUND: 'Not Found!',
@@ -13,5 +15,6 @@ export const ERROR_MESSAGES = {
     SEND_OTP_FAILED: 'Send Otp Failed!',
     OTP_CODE_INVALID: 'Otp Code Invalid!',
     OTP_DESTINATION_INVALID: 'Otp Destination Invalid!',
+    OTP_REQUEST_INVALID: `Exceeding the allowed OTP send attempts! You can only send ${MAXIMUM_NUMBER_OF_TIMES_REQUEST} times per day with each email or phone number.`,
   },
 };

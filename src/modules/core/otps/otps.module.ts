@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Otp } from './entities/otp.entity';
 import { OtpsService } from './otps.service';
@@ -8,7 +13,14 @@ import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import { ESmsService } from '../esms/esms.service';
 import { ConfigService } from '@nestjs/config';
+import { OtpMiddleware } from './middleware/otps.middleware';
+import { API_PATH } from '../../../shared/constants/path.constant';
+import { getBodyRouteOfMiddleWare } from './constant/otps.constant';
 
+const sendRegisterRequestOtp = getBodyRouteOfMiddleWare(
+  API_PATH.SEND_OTP_REQUEST,
+  RequestMethod.POST,
+);
 @Module({
   imports: [TypeOrmModule.forFeature([Otp, User])],
   providers: [
@@ -21,4 +33,8 @@ import { ConfigService } from '@nestjs/config';
   ],
   exports: [OtpsService, ClientOtpsService],
 })
-export class OtpsModule {}
+export class OtpsModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(OtpMiddleware).forRoutes(sendRegisterRequestOtp);
+  }
+}
