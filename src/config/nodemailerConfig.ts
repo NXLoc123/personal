@@ -5,7 +5,6 @@ export const nodeMailerConfig = (
   configService: ConfigService,
 ): MailerOptions => ({
   transport: {
-    // host: configService.get('nodeMailer.host'),
     service: 'gmail',
     auth: {
       user: configService.get('nodeMailer.user'),

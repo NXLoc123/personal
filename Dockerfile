@@ -2,7 +2,7 @@ FROM node:20.6.0
 
 WORKDIR /app
 
-COPY ["package.json", "yarn.lock", "./"]
+COPY ["package.json", "./"]
 
 RUN npm install @nestjs/cli
 

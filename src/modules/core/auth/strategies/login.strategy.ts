@@ -18,7 +18,6 @@ export class LoginStrategy extends PassportStrategy(Strategy) {
         email,
         password,
       };
-
       return await this.authService.validateUser(body);
     } catch (error) {
       console.log(

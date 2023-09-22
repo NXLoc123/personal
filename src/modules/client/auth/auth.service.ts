@@ -22,7 +22,6 @@ export class ClientAuthService {
       sub: userId,
     };
     const accessToken = await this.authService.signToken(payload);
-
     return { accessToken };
   }
 

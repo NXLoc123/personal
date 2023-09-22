@@ -1,4 +1,4 @@
-import { NODE_ENV } from '../shared/constants/env.constant';
+import { ENV_TYPES, NODE_ENV } from '../shared/constants/env.constant';
 
 export const envConfig = () => ({
   port: parseInt(process.env.PORT, 10) || 3000,
@@ -24,10 +24,15 @@ export const envConfig = () => ({
     apikey: process.env.ESMS_API_KEY,
     secretkey: process.env.ESMS_SECRET_KEY,
   },
+  stripe: {
+    secret_key: process.env.STRIPE_SECRET_KEY,
+    api_version: process.env.STRIPE_API_VERSION,
+    api_key: process.env.STRIPE_API_KEY,
+  },
 });
 
-export const envPathFile = () => {
+export const envFilePath = () => {
   return process.env.NODE_ENV === NODE_ENV.Development
-    ? '.env.dev'
-    : '.env.local';
+    ? ENV_TYPES.Development
+    : ENV_TYPES.Local;
 };
