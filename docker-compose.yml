@@ -1,11 +1,11 @@
 version: '3.7'
 
 services:
-  dev-api:
+  api:
     container_name: nestjs
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.second
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
